@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.hf/
+
+# Model checkpoints are release assets, not git objects (about 650 MB each)
+ai/laya_finetune/model/
+ai/laya_finetune/model_*/
+ai/laya_finetune/base/
+
+# Files the training step derives from dataset/*.jsonl
+ai/laya_finetune/dataset/laya_*.jsonl

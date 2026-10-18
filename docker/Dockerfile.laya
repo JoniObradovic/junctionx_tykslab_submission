@@ -1,0 +1,27 @@
+# The AI layer in one image: the Ask endpoint (rules + the Laya guard) and the Laya training tools.
+#
+#   docker build -f docker/Dockerfile.laya -t aei-laya .                              # CPU torch (laptops, reviewers)
+#   docker build -f docker/Dockerfile.laya --build-arg TORCH_INDEX=cu126 -t aei-laya:gpu .   # CUDA 12.6 torch for training on a GPU
+#
+# Serve (CPU), the page then finds the endpoint at 127.0.0.1:8765:
+#   docker run --rm -p 127.0.0.1:8765:8765 -v "$PWD/ai/laya_finetune/model:/app/ai/laya_finetune/model:ro" aei-laya
+# Train on one GPU and follow the log:
+#   docker run -d --name laya-train --gpus all -v "$PWD/ai:/app/ai" aei-laya:gpu \
+#     python ai/laya_finetune/train_laya.py --device cuda --split aug --epochs 3 --output-dir ai/laya_finetune/model_v3
+#   docker logs -f laya-train
+#
+# torch 2.7.1 is the build the checkpoint was trained with. The data/ CSVs are
+# mounted or copied only because the router tables read wards.csv and antibiotics.csv; the
+# container never reads patient-level rows beyond that and never writes request text.
+FROM python:3.12-slim
+ARG TORCH_INDEX=cpu
+ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 HF_HOME=/app/.hf AEI_LAYA_DEVICE=cpu
+WORKDIR /app
+RUN pip install --no-cache-dir "torch==2.7.1" --index-url https://download.pytorch.org/whl/${TORCH_INDEX} \
+ && pip install --no-cache-dir "laya>=0.4" "fastapi>=0.115" "uvicorn>=0.30" "httpx>=0.27" "pandas>=2.0" "numpy>=1.24" "scipy>=1.10"
+COPY build ./build
+COPY ai ./ai
+COPY data/wards.csv data/antibiotics.csv ./data/
+COPY web/data/data.json ./web/data/data.json
+EXPOSE 8765
+CMD ["uvicorn", "ai.serve:app", "--host", "0.0.0.0", "--port", "8765"]

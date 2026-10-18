@@ -1,0 +1,118 @@
+{
+ "heads": {
+  "intent": {
+   "type": "choice",
+   "classes": [
+    "aggregate",
+    "patient_specific",
+    "off_topic"
+   ]
+  },
+  "view": {
+   "type": "choice",
+   "classes": [
+    "clinician",
+    "micro",
+    "steward",
+    null
+   ]
+  },
+  "organism": {
+   "type": "choice",
+   "classes": [
+    "Citrobacter freundii",
+    "Enterococcus faecalis",
+    "Escherichia coli",
+    "Klebsiella oxytoca",
+    "Klebsiella pneumoniae",
+    "Proteus mirabilis",
+    "Pseudomonas aeruginosa",
+    "Staphylococcus aureus",
+    "Staphylococcus saprophyticus",
+    null
+   ]
+  },
+  "specimen": {
+   "type": "choice",
+   "classes": [
+    "urine",
+    "wound",
+    "blood",
+    null
+   ]
+  },
+  "unit": {
+   "type": "choice",
+   "classes": [
+    "ED",
+    "MED-A",
+    "MED-B",
+    "SURG",
+    "URO",
+    "ICU",
+    "GER",
+    "PHC-N",
+    "PHC-S",
+    "inpatient",
+    "ed",
+    "primary",
+    "ALL",
+    "context",
+    null
+   ]
+  },
+  "sex": {
+   "type": "choice",
+   "classes": [
+    "F",
+    "M",
+    null
+   ]
+  },
+  "onset": {
+   "type": "choice",
+   "classes": [
+    "hospital",
+    "community",
+    null
+   ]
+  },
+  "window": {
+   "type": "choice",
+   "classes": [
+    "4w",
+    "8w",
+    "13w",
+    "26w",
+    "52w",
+    "annual",
+    "current_year",
+    "Y2023",
+    "Y2024",
+    "Y2025",
+    "Y2026",
+    null
+   ]
+  },
+  "agent": {
+   "type": "choice",
+   "classes": [
+    "AMP",
+    "MEC",
+    "TZP",
+    "FOX",
+    "CXM",
+    "CRO",
+    "CAZ",
+    "MEM",
+    "CIP",
+    "TMP",
+    "NIT",
+    "VAN",
+    "CLI",
+    null
+   ]
+  }
+ },
+ "guardrail": "P(intent = patient_specific) is the calibrated gate; a redirect missed is the costly error."
+}
